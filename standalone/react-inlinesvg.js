@@ -3,11 +3,9 @@
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * 
  */
@@ -40,11 +38,27 @@ module.exports = emptyFunction;
 },{}],2:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
+'use strict';
+
+var emptyObject = {};
+
+if ("production" !== 'production') {
+  Object.freeze(emptyObject);
+}
+
+module.exports = emptyObject;
+},{}],3:[function(require,module,exports){
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  */
 
@@ -93,14 +107,12 @@ function invariant(condition, format, a, b, c, d, e, f) {
 }
 
 module.exports = invariant;
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 /**
- * Copyright 2014-2015, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2014-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  */
 
@@ -118,49 +130,47 @@ var emptyFunction = require('./emptyFunction');
 var warning = emptyFunction;
 
 if ("production" !== 'production') {
-  (function () {
-    var printWarning = function printWarning(format) {
-      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
+  var printWarning = function printWarning(format) {
+    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
+    var argIndex = 0;
+    var message = 'Warning: ' + format.replace(/%s/g, function () {
+      return args[argIndex++];
+    });
+    if (typeof console !== 'undefined') {
+      console.error(message);
+    }
+    try {
+      // --- Welcome to debugging React ---
+      // This error was thrown as a convenience so that you can use this stack
+      // to find the callsite that caused this warning to fire.
+      throw new Error(message);
+    } catch (x) {}
+  };
+
+  warning = function warning(condition, format) {
+    if (format === undefined) {
+      throw new Error('`warning(condition, format, ...args)` requires a warning ' + 'message argument');
+    }
+
+    if (format.indexOf('Failed Composite propType: ') === 0) {
+      return; // Ignore CompositeComponent proptype check.
+    }
+
+    if (!condition) {
+      for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+        args[_key2 - 2] = arguments[_key2];
       }
 
-      var argIndex = 0;
-      var message = 'Warning: ' + format.replace(/%s/g, function () {
-        return args[argIndex++];
-      });
-      if (typeof console !== 'undefined') {
-        console.error(message);
-      }
-      try {
-        // --- Welcome to debugging React ---
-        // This error was thrown as a convenience so that you can use this stack
-        // to find the callsite that caused this warning to fire.
-        throw new Error(message);
-      } catch (x) {}
-    };
-
-    warning = function warning(condition, format) {
-      if (format === undefined) {
-        throw new Error('`warning(condition, format, ...args)` requires a warning ' + 'message argument');
-      }
-
-      if (format.indexOf('Failed Composite propType: ') === 0) {
-        return; // Ignore CompositeComponent proptype check.
-      }
-
-      if (!condition) {
-        for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
-          args[_key2 - 2] = arguments[_key2];
-        }
-
-        printWarning.apply(undefined, [format].concat(args));
-      }
-    };
-  })();
+      printWarning.apply(undefined, [format].concat(args));
+    }
+  };
 }
 
 module.exports = warning;
-},{"./emptyFunction":1}],4:[function(require,module,exports){
+},{"./emptyFunction":1}],5:[function(require,module,exports){
 'use strict';
 
 var Response = require('./response');
@@ -198,7 +208,7 @@ RequestError.create = function(message, req, props) {
 
 module.exports = RequestError;
 
-},{"./response":7,"./utils/extractResponseProps":9,"xtend":32}],5:[function(require,module,exports){
+},{"./response":8,"./utils/extractResponseProps":10,"xtend":13}],6:[function(require,module,exports){
 'use strict';
 
 var
@@ -412,7 +422,7 @@ function getError(req, err) {
   return createError(msg, req);
 }
 
-},{"../plugins/cleanurl":12,"./error":4,"./request":6,"./response":7,"./utils/delay":8,"./utils/once":10,"./xhr":11,"xtend":32}],6:[function(require,module,exports){
+},{"../plugins/cleanurl":14,"./error":5,"./request":7,"./response":8,"./utils/delay":9,"./utils/once":11,"./xhr":12,"xtend":13}],7:[function(require,module,exports){
 'use strict';
 
 function Request(optsOrUrl) {
@@ -457,7 +467,7 @@ Request.prototype.header = function(name, value) {
 
 module.exports = Request;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 var Request = require('./request');
@@ -483,7 +493,7 @@ Response.fromRequest = function(req) {
 
 module.exports = Response;
 
-},{"./request":6,"./utils/extractResponseProps":9}],8:[function(require,module,exports){
+},{"./request":7,"./utils/extractResponseProps":10}],9:[function(require,module,exports){
 'use strict';
 
 // Wrap a function in a `setTimeout` call. This is used to guarantee async
@@ -500,7 +510,7 @@ module.exports = function(fn) {
   };
 };
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 
 var extend = require('xtend');
@@ -535,7 +545,7 @@ module.exports = function(req) {
   return props;
 };
 
-},{"xtend":32}],10:[function(require,module,exports){
+},{"xtend":13}],11:[function(require,module,exports){
 'use strict';
 
 // A "once" utility.
@@ -550,10 +560,29 @@ module.exports = function(fn) {
   };
 };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 module.exports = window.XMLHttpRequest;
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
+module.exports = extend
+
+function extend() {
+    var target = {}
+
+    for (var i = 0; i < arguments.length; i++) {
+        var source = arguments[i]
+
+        for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+                target[key] = source[key]
+            }
+        }
+    }
+
+    return target
+}
+
+},{}],14:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -564,7 +593,7 @@ module.exports = {
   }
 };
 
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 'use strict';
 
 var
@@ -634,7 +663,7 @@ module.exports = {
   }
 };
 
-},{"../lib/utils/once":10,"urllite/lib/core":30}],14:[function(require,module,exports){
+},{"../lib/utils/once":11,"urllite/lib/core":26}],16:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -726,7 +755,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],15:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 var wrappy = require('wrappy')
 module.exports = wrappy(once)
 module.exports.strict = wrappy(onceStrict)
@@ -770,14 +799,12 @@ function onceStrict (fn) {
   return f
 }
 
-},{"wrappy":31}],16:[function(require,module,exports){
+},{"wrappy":27}],18:[function(require,module,exports){
 /**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2013-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 'use strict';
@@ -811,7 +838,7 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
         try {
           // This is intentionally an invariant that gets caught. It's the same
           // behavior as without this statement except with a better message.
-          invariant(typeof typeSpecs[typeSpecName] === 'function', '%s: %s type `%s` is invalid; it must be a function, usually from ' + 'React.PropTypes.', componentName || 'React class', location, typeSpecName);
+          invariant(typeof typeSpecs[typeSpecName] === 'function', '%s: %s type `%s` is invalid; it must be a function, usually from ' + 'the `prop-types` package, but received `%s`.', componentName || 'React class', location, typeSpecName, typeof typeSpecs[typeSpecName]);
           error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, ReactPropTypesSecret);
         } catch (ex) {
           error = ex;
@@ -833,14 +860,12 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
 
 module.exports = checkPropTypes;
 
-},{"./lib/ReactPropTypesSecret":20,"fbjs/lib/invariant":2,"fbjs/lib/warning":3}],17:[function(require,module,exports){
+},{"./lib/ReactPropTypesSecret":22,"fbjs/lib/invariant":3,"fbjs/lib/warning":4}],19:[function(require,module,exports){
 /**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2013-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 'use strict';
@@ -885,7 +910,8 @@ module.exports = function() {
     objectOf: getShim,
     oneOf: getShim,
     oneOfType: getShim,
-    shape: getShim
+    shape: getShim,
+    exact: getShim
   };
 
   ReactPropTypes.checkPropTypes = emptyFunction;
@@ -894,14 +920,12 @@ module.exports = function() {
   return ReactPropTypes;
 };
 
-},{"./lib/ReactPropTypesSecret":20,"fbjs/lib/emptyFunction":1,"fbjs/lib/invariant":2}],18:[function(require,module,exports){
+},{"./lib/ReactPropTypesSecret":22,"fbjs/lib/emptyFunction":1,"fbjs/lib/invariant":3}],20:[function(require,module,exports){
 /**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2013-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 'use strict';
@@ -909,6 +933,7 @@ module.exports = function() {
 var emptyFunction = require('fbjs/lib/emptyFunction');
 var invariant = require('fbjs/lib/invariant');
 var warning = require('fbjs/lib/warning');
+var assign = require('object-assign');
 
 var ReactPropTypesSecret = require('./lib/ReactPropTypesSecret');
 var checkPropTypes = require('./checkPropTypes');
@@ -1007,7 +1032,8 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
     objectOf: createObjectOfTypeChecker,
     oneOf: createEnumTypeChecker,
     oneOfType: createUnionTypeChecker,
-    shape: createShapeTypeChecker
+    shape: createShapeTypeChecker,
+    exact: createStrictShapeTypeChecker,
   };
 
   /**
@@ -1222,7 +1248,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
       if (typeof checker !== 'function') {
         warning(
           false,
-          'Invalid argument supplid to oneOfType. Expected an array of check functions, but ' +
+          'Invalid argument supplied to oneOfType. Expected an array of check functions, but ' +
           'received %s at index %s.',
           getPostfixForTypeWarning(checker),
           i
@@ -1273,6 +1299,36 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
       }
       return null;
     }
+    return createChainableTypeChecker(validate);
+  }
+
+  function createStrictShapeTypeChecker(shapeTypes) {
+    function validate(props, propName, componentName, location, propFullName) {
+      var propValue = props[propName];
+      var propType = getPropType(propValue);
+      if (propType !== 'object') {
+        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type `' + propType + '` ' + ('supplied to `' + componentName + '`, expected `object`.'));
+      }
+      // We need to check all keys in case some are required but missing from
+      // props.
+      var allKeys = assign({}, props[propName], shapeTypes);
+      for (var key in allKeys) {
+        var checker = shapeTypes[key];
+        if (!checker) {
+          return new PropTypeError(
+            'Invalid ' + location + ' `' + propFullName + '` key `' + key + '` supplied to `' + componentName + '`.' +
+            '\nBad object: ' + JSON.stringify(props[propName], null, '  ') +
+            '\nValid keys: ' +  JSON.stringify(Object.keys(shapeTypes), null, '  ')
+          );
+        }
+        var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
+        if (error) {
+          return error;
+        }
+      }
+      return null;
+    }
+
     return createChainableTypeChecker(validate);
   }
 
@@ -1408,14 +1464,12 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
   return ReactPropTypes;
 };
 
-},{"./checkPropTypes":16,"./lib/ReactPropTypesSecret":20,"fbjs/lib/emptyFunction":1,"fbjs/lib/invariant":2,"fbjs/lib/warning":3}],19:[function(require,module,exports){
+},{"./checkPropTypes":18,"./lib/ReactPropTypesSecret":22,"fbjs/lib/emptyFunction":1,"fbjs/lib/invariant":3,"fbjs/lib/warning":4,"object-assign":16}],21:[function(require,module,exports){
 /**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2013-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 if ("production" !== 'production') {
@@ -1440,14 +1494,12 @@ if ("production" !== 'production') {
   module.exports = require('./factoryWithThrowingShims')();
 }
 
-},{"./factoryWithThrowingShims":17,"./factoryWithTypeCheckers":18}],20:[function(require,module,exports){
+},{"./factoryWithThrowingShims":19,"./factoryWithTypeCheckers":20}],22:[function(require,module,exports){
 /**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2013-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
 
 'use strict';
@@ -1456,7 +1508,7 @@ var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 
 module.exports = ReactPropTypesSecret;
 
-},{}],21:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 /** @license React v16.0.0
  * react.development.js
  *
@@ -3156,7 +3208,7 @@ module.exports = ReactEntry;
 })();
 }
 
-},{"fbjs/lib/emptyFunction":24,"fbjs/lib/emptyObject":25,"fbjs/lib/invariant":26,"fbjs/lib/warning":27,"object-assign":14,"prop-types/checkPropTypes":28}],22:[function(require,module,exports){
+},{"fbjs/lib/emptyFunction":1,"fbjs/lib/emptyObject":2,"fbjs/lib/invariant":3,"fbjs/lib/warning":4,"object-assign":16,"prop-types/checkPropTypes":18}],24:[function(require,module,exports){
 /*
  React v16.0.0
  react.production.min.js
@@ -3181,7 +3233,7 @@ Object.keys(a).join(", ")+"}":d,""));return g}function O(a,b){return"object"===t
 function R(a,b,d,e,c){var g="";null!=d&&(g=(""+d).replace(J,"$\x26/")+"/");b=L(b,g,e,c);null==a||N(a,"",Q,b);M(b)}var S={forEach:function(a,b,d){if(null==a)return a;b=L(null,null,b,d);null==a||N(a,"",P,b);M(b)},map:function(a,b,d){if(null==a)return a;var e=[];R(a,e,null,b,d);return e},count:function(a){return null==a?0:N(a,"",r.thatReturnsNull,null)},toArray:function(a){var b=[];R(a,b,null,r.thatReturnsArgument);return b}};
 module.exports={Children:{map:S.map,forEach:S.forEach,count:S.count,toArray:S.toArray,only:function(a){G.isValidElement(a)?void 0:t("143");return a}},Component:B.Component,PureComponent:B.PureComponent,unstable_AsyncComponent:B.AsyncComponent,createElement:G.createElement,cloneElement:G.cloneElement,isValidElement:G.isValidElement,createFactory:G.createFactory,version:"16.0.0",__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{ReactCurrentOwner:C,assign:f}};
 
-},{"fbjs/lib/emptyFunction":24,"fbjs/lib/emptyObject":25,"fbjs/lib/invariant":26,"object-assign":14}],23:[function(require,module,exports){
+},{"fbjs/lib/emptyFunction":1,"fbjs/lib/emptyObject":2,"fbjs/lib/invariant":3,"object-assign":16}],25:[function(require,module,exports){
 'use strict';
 
 if ("production" === 'production') {
@@ -3190,254 +3242,7 @@ if ("production" === 'production') {
   module.exports = require('./cjs/react.development.js');
 }
 
-},{"./cjs/react.development.js":21,"./cjs/react.production.min.js":22}],24:[function(require,module,exports){
-"use strict";
-
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- * 
- */
-
-function makeEmptyFunction(arg) {
-  return function () {
-    return arg;
-  };
-}
-
-/**
- * This function accepts and discards inputs; it has no side effects. This is
- * primarily useful idiomatically for overridable function endpoints which
- * always need to be callable, since JS lacks a null-call idiom ala Cocoa.
- */
-var emptyFunction = function emptyFunction() {};
-
-emptyFunction.thatReturns = makeEmptyFunction;
-emptyFunction.thatReturnsFalse = makeEmptyFunction(false);
-emptyFunction.thatReturnsTrue = makeEmptyFunction(true);
-emptyFunction.thatReturnsNull = makeEmptyFunction(null);
-emptyFunction.thatReturnsThis = function () {
-  return this;
-};
-emptyFunction.thatReturnsArgument = function (arg) {
-  return arg;
-};
-
-module.exports = emptyFunction;
-},{}],25:[function(require,module,exports){
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- */
-
-'use strict';
-
-var emptyObject = {};
-
-if ("production" !== 'production') {
-  Object.freeze(emptyObject);
-}
-
-module.exports = emptyObject;
-},{}],26:[function(require,module,exports){
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- */
-
-'use strict';
-
-/**
- * Use invariant() to assert state which your program assumes to be true.
- *
- * Provide sprintf-style format (only %s is supported) and arguments
- * to provide information about what broke and what you were
- * expecting.
- *
- * The invariant message will be stripped in production, but the invariant
- * will remain to ensure logic does not differ in production.
- */
-
-var validateFormat = function validateFormat(format) {};
-
-if ("production" !== 'production') {
-  validateFormat = function validateFormat(format) {
-    if (format === undefined) {
-      throw new Error('invariant requires an error message argument');
-    }
-  };
-}
-
-function invariant(condition, format, a, b, c, d, e, f) {
-  validateFormat(format);
-
-  if (!condition) {
-    var error;
-    if (format === undefined) {
-      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
-    } else {
-      var args = [a, b, c, d, e, f];
-      var argIndex = 0;
-      error = new Error(format.replace(/%s/g, function () {
-        return args[argIndex++];
-      }));
-      error.name = 'Invariant Violation';
-    }
-
-    error.framesToPop = 1; // we don't care about invariant's own frame
-    throw error;
-  }
-}
-
-module.exports = invariant;
-},{}],27:[function(require,module,exports){
-/**
- * Copyright (c) 2014-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- */
-
-'use strict';
-
-var emptyFunction = require('./emptyFunction');
-
-/**
- * Similar to invariant but only logs a warning if the condition is not met.
- * This can be used to log issues in development environments in critical
- * paths. Removing the logging code for production environments will keep the
- * same logic and follow the same code paths.
- */
-
-var warning = emptyFunction;
-
-if ("production" !== 'production') {
-  var printWarning = function printWarning(format) {
-    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      args[_key - 1] = arguments[_key];
-    }
-
-    var argIndex = 0;
-    var message = 'Warning: ' + format.replace(/%s/g, function () {
-      return args[argIndex++];
-    });
-    if (typeof console !== 'undefined') {
-      console.error(message);
-    }
-    try {
-      // --- Welcome to debugging React ---
-      // This error was thrown as a convenience so that you can use this stack
-      // to find the callsite that caused this warning to fire.
-      throw new Error(message);
-    } catch (x) {}
-  };
-
-  warning = function warning(condition, format) {
-    if (format === undefined) {
-      throw new Error('`warning(condition, format, ...args)` requires a warning ' + 'message argument');
-    }
-
-    if (format.indexOf('Failed Composite propType: ') === 0) {
-      return; // Ignore CompositeComponent proptype check.
-    }
-
-    if (!condition) {
-      for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
-        args[_key2 - 2] = arguments[_key2];
-      }
-
-      printWarning.apply(undefined, [format].concat(args));
-    }
-  };
-}
-
-module.exports = warning;
-},{"./emptyFunction":24}],28:[function(require,module,exports){
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
-'use strict';
-
-if ("production" !== 'production') {
-  var invariant = require('fbjs/lib/invariant');
-  var warning = require('fbjs/lib/warning');
-  var ReactPropTypesSecret = require('./lib/ReactPropTypesSecret');
-  var loggedTypeFailures = {};
-}
-
-/**
- * Assert that the values match with the type specs.
- * Error messages are memorized and will only be shown once.
- *
- * @param {object} typeSpecs Map of name to a ReactPropType
- * @param {object} values Runtime values that need to be type-checked
- * @param {string} location e.g. "prop", "context", "child context"
- * @param {string} componentName Name of the component for error messages.
- * @param {?Function} getStack Returns the component stack.
- * @private
- */
-function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
-  if ("production" !== 'production') {
-    for (var typeSpecName in typeSpecs) {
-      if (typeSpecs.hasOwnProperty(typeSpecName)) {
-        var error;
-        // Prop type validation may throw. In case they do, we don't want to
-        // fail the render phase where it didn't fail before. So we log it.
-        // After these have been cleaned up, we'll let them throw.
-        try {
-          // This is intentionally an invariant that gets caught. It's the same
-          // behavior as without this statement except with a better message.
-          invariant(typeof typeSpecs[typeSpecName] === 'function', '%s: %s type `%s` is invalid; it must be a function, usually from ' + 'the `prop-types` package, but received `%s`.', componentName || 'React class', location, typeSpecName, typeof typeSpecs[typeSpecName]);
-          error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, ReactPropTypesSecret);
-        } catch (ex) {
-          error = ex;
-        }
-        warning(!error || error instanceof Error, '%s: type specification of %s `%s` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a %s. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).', componentName || 'React class', location, typeSpecName, typeof error);
-        if (error instanceof Error && !(error.message in loggedTypeFailures)) {
-          // Only monitor this failure once because there tends to be a lot of the
-          // same error.
-          loggedTypeFailures[error.message] = true;
-
-          var stack = getStack ? getStack() : '';
-
-          warning(false, 'Failed %s type: %s%s', location, error.message, stack != null ? stack : '');
-        }
-      }
-    }
-  }
-}
-
-module.exports = checkPropTypes;
-
-},{"./lib/ReactPropTypesSecret":29,"fbjs/lib/invariant":26,"fbjs/lib/warning":27}],29:[function(require,module,exports){
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
-'use strict';
-
-var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
-
-module.exports = ReactPropTypesSecret;
-
-},{}],30:[function(require,module,exports){
+},{"./cjs/react.development.js":23,"./cjs/react.production.min.js":24}],26:[function(require,module,exports){
 (function() {
   var URL, URL_PATTERN, defaults, urllite,
     __hasProp = {}.hasOwnProperty;
@@ -3504,7 +3309,7 @@ module.exports = ReactPropTypesSecret;
 
 }).call(this);
 
-},{}],31:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 // Returns a wrapper function that returns a wrapped callback
 // The wrapper function should do some stuff, and return a
 // presumably different callback function.
@@ -3539,26 +3344,7 @@ function wrappy (fn, cb) {
   }
 }
 
-},{}],32:[function(require,module,exports){
-module.exports = extend
-
-function extend() {
-    var target = {}
-
-    for (var i = 0; i < arguments.length; i++) {
-        var source = arguments[i]
-
-        for (var key in source) {
-            if (source.hasOwnProperty(key)) {
-                target[key] = source[key]
-            }
-        }
-    }
-
-    return target
-}
-
-},{}],33:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3699,7 +3485,7 @@ var InlineSVG = function (_React$PureComponent) {
         }
 
         if (!getRequestsByUrl[src]) {
-          getRequestsByUrl[src] = [callback];
+          getRequestsByUrl[src] = [];
 
           http.get(src, function (err, res) {
             getRequestsByUrl[src].forEach(function (cb) {
@@ -3708,6 +3494,8 @@ var InlineSVG = function (_React$PureComponent) {
             });
           });
         }
+
+        getRequestsByUrl[src].push(callback);
       } else {
         http.get(src, function (err, res) {
           callback(err, res);
@@ -3839,7 +3627,7 @@ InlineSVG.defaultProps = {
 exports.default = InlineSVG;
 module.exports = exports['default'];
 
-},{"./utils":34,"httpplease":5,"httpplease/plugins/oldiexdomain":13,"prop-types":19,"react":23}],34:[function(require,module,exports){
+},{"./utils":29,"httpplease":6,"httpplease/plugins/oldiexdomain":15,"prop-types":21,"react":25}],29:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3968,5 +3756,5 @@ var configurationError = exports.configurationError = function configurationErro
   });
 };
 
-},{"once":15}]},{},[33])(33)
+},{"once":17}]},{},[28])(28)
 });
